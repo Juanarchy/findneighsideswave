@@ -1,4 +1,7 @@
-import cupy as np
+try:
+    import cupy as np
+except Exception:
+    import numpy as np
 
 """
 This script loads a shape (nElems,3) array from a text file whose i-th row contains the index of the (possibly 1-indexed) nodes at each vertex of the i-th triangle 
@@ -161,4 +164,6 @@ while not (np.isin(list_of_cells,checked)).all():
 #save results
 np.savetxt('ElemNeighsFound2.txt',ElemNeighs,fmt="%1d")
 np.savetxt('ElemNeighSidesFound2.txt',ElemNeighSides,fmt="%1d")
+
 np.savetxt('ElemNodesNew2.txt',elements,fmt='%1d')
+
