@@ -1,14 +1,28 @@
 import cupy as np
 
 """
-This script loads a shape (3,nElems) array from a text file whose i-th row contains the index of the (possibly 1-indexed) nodes at each vertex of the i-th triangle 
+This script loads a shape (nElems,3) array from a text file whose i-th row contains the index of the (possibly 1-indexed) nodes at each vertex of the i-th triangle 
 of a non-ramified triangulation, and saves 3 text files containing each:
-    - A shape (3,nElems) array whose i-th row contains, at position j, the index of the cell that neighbors cell i from side j if there's one, or -1 if there's none.
-    - A shape (3,nElems) array whose i-th row contains, at position j, the limiting side of the cell that neighbors cell i from side j.
-    - A shape (3,nElems) array whose i-th row contains the index of the (now 0-indexed) nodes at each vertex of the i-th triangle.
+    - A shape (nElems,3) array whose i-th row contains, at position j, the index of the cell that neighbors cell i from side j. (ElemNeighsFound.txt)
+    - A shape (nElems,3) array whose i-th row contains, at position j, the limiting side of the cell that neighbors cell i from side j. (ElemNeighSidesFound.txt)
+    - A shape (nElems,3) array whose i-th row contains the index of the (now 0-indexed) nodes at each vertex of the i-th triangle. (ElemNodesNew.txt)
+                 X
+                / \ 
+               /   \ 
+              /     \ 
+     X-------X-------X 
+      \     / \  1  / \ 
+       \   /1n0\2m0/   \      In this example, cell n has cell m as a neighbor from its side 0, while cell m has cell n as a neighbor from
+        \ /  2  \ /     \     its side 2. Therefore: 
+         X-------X-------X 
+        / \     / \               - ElemNeighs[n,0] == m
+       /   \   /   \              - ElemNeighs[m,2] == n
+      /     \ /     \             - ElemNeighSides[n,0] == 2
+     X-------V-------X            - ElemNeighSides[m,2] == 0
+     
 
 Its implemented wave/paintdrop-strategy algorithm starts the "wave" at a random cell and compares the three sides of each "wavefront" cell to the three sides of each "outside"
-cell, and then positions neighbors and sides accordingly through precise array manipulation thus avoiding big loops and conditional statements of any kind. This means that it 
+cell, and then positions neighbors and sides accordingly through precise array manipulation thus avoiding long loops and conditional statements of any kind. This means that it 
 can efficiently be parallelized or ran on GPUs through CUDA implementations of numpy such as cupy. This algorithm can be easily extended to arbitrary (even higher-dimensional)
 non-ramified tilings by translating "sides" into "faces" and all their concerning instructions.
 
