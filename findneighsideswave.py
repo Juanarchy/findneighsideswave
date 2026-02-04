@@ -13,7 +13,7 @@ can efficiently be parallelized or ran on GPUs through CUDA implementations of n
 non-ramified tilings by translating "sides" into "faces" and all their concerning instructions.
 
 This implementation is a memory-wise middle ground between iterating over each cell (findneighsides) and comparing all cells at once (findneighsides2), and is able to solve
-relatively big problems faster without problems.
+relatively big problems faster (hopefully) without memory problems.
 
 It also has the option to load a text file containing the indices of cells to remove from the tiling, but I haven't tested what happens if one removes enough cells
 to leave nodes isolated. I suspect that would be fine, but the resulting answers would assume the existence of said unused, isolated nodes.
@@ -140,4 +140,5 @@ while not (np.isin(list_of_cells,checked)).all():
 #save results
 np.savetxt('ElemNeighsFound2.txt',ElemNeighs,fmt="%1d")
 np.savetxt('ElemNeighSidesFound2.txt',ElemNeighSides,fmt="%1d")
+
 np.savetxt('ElemNodesNew2.txt',elements,fmt='%1d')
