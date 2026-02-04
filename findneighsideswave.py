@@ -1,4 +1,7 @@
-import cupy as np
+try:
+    import cupy as np
+except Exception:
+    import numpy as np
 
 """
 This script loads a shape (3,nElems) array from a text file whose i-th row contains the index of the (possibly 1-indexed) nodes at each vertex of the i-th triangle 
@@ -9,8 +12,9 @@ of a non-ramified triangulation, and saves 3 text files containing each:
 
 Its implemented wave/paintdrop-strategy algorithm starts the "wave" at a random cell and compares the three sides of each "wavefront" cell to the three sides of each "outside"
 cell, and then positions neighbors and sides accordingly through precise array manipulation thus avoiding big loops and conditional statements of any kind. This means that it 
-can efficiently be parallelized or ran on GPUs through CUDA implementations of numpy such as cupy. This algorithm can be easily extended to arbitrary (even higher-dimensional)
-non-ramified tilings by translating "sides" into "faces" and all their concerning instructions.
+can efficiently be parallelized or ran on GPUs through CUDA implementations of numpy such as cupy. Potential optimization through customized element-wise kernels or kernel fusion
+is an attractive prospective. This algorithm can be easily extended to arbitrary (even higher-dimensional) non-ramified tilings by translating "sides" into "faces" and all 
+their concerning instructions.
 
 This implementation is a memory-wise middle ground between iterating over each cell (findneighsides) and comparing all cells at once (findneighsides2), and is able to solve
 relatively big problems faster (hopefully) without memory problems.
@@ -142,3 +146,4 @@ np.savetxt('ElemNeighsFound2.txt',ElemNeighs,fmt="%1d")
 np.savetxt('ElemNeighSidesFound2.txt',ElemNeighSides,fmt="%1d")
 
 np.savetxt('ElemNodesNew2.txt',elements,fmt='%1d')
+
