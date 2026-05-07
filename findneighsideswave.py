@@ -24,11 +24,11 @@ of a non-ramified triangulation, and saves 3 text files containing each:
      X-------V-------X            - ElemNeighSides[m,2] == 0
      
 
-Its implemented wave/paintdrop-strategy algorithm starts the "wave" at a random cell and compares the three sides of each "wavefront" cell to the three sides of each "outside"
-cell, and then positions neighbors and sides accordingly through precise array manipulation thus avoiding big loops and conditional statements of any kind. This means that it 
-can efficiently be parallelized or ran on GPUs through CUDA implementations of numpy such as cupy. Potential optimization through customized element-wise kernels or kernel fusion
-is an attractive prospective. This algorithm can be easily extended to arbitrary (even higher-dimensional) non-ramified tilings by translating "sides" into "faces" and all 
-their concerning instructions.
+Its implemented wave/paintdrop-strategy algorithm starts the "filling wave" at a (list of) random cell(s) and compares the three sides of each "wavefront" cell to the three sides
+of each "outside" cell, and then positions neighbors and sides accordingly through precise array manipulation thus avoiding big loops and conditional statements of any kind. This 
+means that it can efficiently be parallelized or ran on GPUs through CUDA implementations of numpy such as cupy. Potential optimization through customized element-wise kernels or
+kernel fusion is an attractive prospective. This algorithm can be easily extended to arbitrary (even higher-dimensional) non-ramified tilings by translating "sides" into "faces" 
+and all their concerning instructions.
 
 This implementation is a memory-wise middle ground between iterating over each cell (findneighsides) and comparing all cells at once (findneighsides2), and is able to solve
 relatively big problems faster (hopefully) without memory problems.
